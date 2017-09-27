@@ -2,11 +2,11 @@
 
 ## Vamos conversar sobre desenvolvimento guiados por testes
 
-Para garantirmos que nossa aplicação mantenha sua responsabilidade, suas rotas, e as requisições e respostas estão sendo atendidas; e que estamos entregando o que prometemos e que tudo está funcionando. Para isso, vamos usar um modelo conhecido como TDD(Test Driven Development ou Desenvolvimento Guido por Tests).
+Para garantirmos que nossa aplicação mantenha sua responsabilidade, suas rotas, e as requisições e respostas estão sendo atendidas; e que estamos entregando o que prometemos e que tudo está funcionando. Para isso, vamos usar um modelo conhecido como TDD (Test Driven Development ou Desenvolvimento Guido por Tests).
 
 ## TDD - Test Driven Development
 
-   O TDD é um processo de desenvolvimento de software que visa o feedback rápido e a garantia de que o comportamento da aplicação está cumprindo o que é requirido. Para isso o processo funciona em ciclos pequenos e os requerimentos são escritos como casos de teste.
+O TDD é um processo de desenvolvimento de software que visa o feedback rápido e a garantia de que o comportamento da aplicação está cumprindo o que é requirido. Para isso o processo funciona em ciclos pequenos e os requerimentos são escritos como casos de teste.
 
 A prática do TDD aumentou depois que Kent Beck publicou o livro TDD - Test Driven Development e fomentou a discussão em torno do tema. Grande figuras da comunidade ágil como Martin Fowler também influenciaram na adoção dessa práticas publicando artigos, ministrando palestras e compartilhando cases de sucess.
 
