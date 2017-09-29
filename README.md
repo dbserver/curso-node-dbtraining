@@ -73,3 +73,25 @@ Após isso um arquivo chamado **package.json** será criado com o conteúdo seme
 ```
 
 O **package.json** é responsável por aguardar  as configurações npm do nosso projeto, nele ficarão nossos scripts para executar a aplicação e os testes.
+
+## Configurando suporte ao Ecmascript 6
+
+O Babel será responsável por nos permitir usar as funcionalidade do ES6, para isso precisamos instalar os pacotes e configurar o nosso ambiente para o suporte o ES6 por padrão em nossa aplicação. O primeiro passo é instalar os pacotes do Babel:
+
+> npm i babel-cli -D
+
+Após instalar o Babel é necessário instalar o preset que será usado, no nosso caso será o ES6:
+
+> npm i babel-preset-node6 -D
+
+Note que sempre usa -D para instalar as dependências em modo de desenvolvimento pois ele não deve ser usado diretamente em produção.
+
+O último passo é informar para o Babel qual preset iremos usar, para isso basta criar um arquivo no diretório raiz da nossa aplicação chamado **.babelrc** com as seguintes configurações.
+
+```json
+    {
+        "preset": ["node6"]
+    }
+```
+
+Feito isso a aplicação já está suportando 100% o ES6 e será possível utilizar as funcionalidades da versão.
