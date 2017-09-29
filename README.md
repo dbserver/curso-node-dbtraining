@@ -37,6 +37,27 @@ Para iniciarmos um projeto em Node.js, a primeira coisa que devemos fazer é ini
 
 > npm init
 
+Semelhate ao git, o npm inicializará um projeto nesse diretório, depois de executar o camando `npm init` vai apresentar uma série de pergutas como:
+
+* **name**, referente ao nome do projeto.
+
+* **version**, referente a versão.
+
+* **description**, referente a descrição do projeto que está sendo criado.
+
+* **entry point**,  arquivo que será o ponto de entrada caso o projeto seja importado por outro.
+
+* **test command**, comando que executará os testes da aplicação.
+
+* **git repository**, repositório git do projeto.
+
+* **keywords**, palavras chave para outros desenvolvedores encontrar o seu projeto no npm.
+
+* **author**, autor do projeto.
+
+* **license**, referente a licença de uso do código.
+
+Após isso um arquivo chamado **package.json** será criado com o conteúdo semelhante a:
 
 ```json
     {
@@ -50,3 +71,5 @@ Para iniciarmos um projeto em Node.js, a primeira coisa que devemos fazer é ini
         "license": "ISC"
     }
 ```
+
+O **package.json** é responsável por aguardar  as configurações npm do nosso projeto, nele ficarão nossos scripts para executar a aplicação e os testes.
