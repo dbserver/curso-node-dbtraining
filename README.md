@@ -291,7 +291,7 @@ Na implementação do teste usamos o supertest que exportamos globalmente como r
 a sua resposta.
 
 Quando a requisição terminar a função end será chamada pelo supertest e vai receber a resposta ou
-um erro, caso ocorra. No exemplo acima é verificado se o primeiro elemento da lista de produtos
+um erro, caso ocorra. No exemplo acima é verificado se o primeiro elemento da lista de livros
 retornada é igual ao nosso *livroPadrao*.
 
 O expect usado para fazer a asserção faz parte do Chai e foi exposto globalmente no helpers.js.
@@ -326,3 +326,61 @@ GET /livros
         deve retornar uma lista de livros:
     Uncaught AssertionError: expected undefined to deeply equal { Object (nome, descricao, ...) }
 ```
+
+### Fazendo os testes passarem 
+
+Escrevemos nossos testes e eles estão no estado RED, ou seja, implementados mas não estão
+passando. O próximo passo, seguindo o TDD, é o GREEN onde vamos implementar o mínimo para
+fazer o teste passar.
+
+Para isso precisamos implementar uma rota em nossa aplicação.
+
+Primeiro vamos criar um diretório dentro de *src*, chamado **livros** e dentro dele um arquivo chamado `livro-routes.js`. Segue o comando para criação:
+
+```sh
+    mkdir src/livros
+    touch src/livros/livro-routes.js
+```
+E o arquivo `livro-routes.js` ficará assim:
+
+```js
+module.exports = (app) => {
+
+    app.route('/livros')
+        .get((req, res) => {
+            res.json([{
+                nome: 'Criando aplicações testáveis com Nodejs',
+                descricao: 'Descrição do livro',
+                preco: 100
+            }])
+        })
+}
+```
+
+E também precisamos ir até o aquivo `app.js` e importar essa dependência e logo abaixo executá-la passando o **app** por parâmentro.
+
+```js
+const livroRoutes = require('./livros/livro-routes')
+
+...
+
+livroRoutes(app)
+```
+
+Rodamos o teste novamente e veremos o resultado:
+
+> npm run test:integration
+
+A saída deve ser de sucesso, como essa:
+
+```sh
+Routes: Livros
+    GET /livros
+      ✓ deve retornar uma lista de livros
+
+  1 passing (54ms)
+```
+
+Nosso teste está passando, e estamos no estado **GREEN** do TDD, ou seja, temos o teste e a
+implementação suficiente para ele passar. O próximo passo será o **REFACTOR** onde iremos
+configurar as rotas.
