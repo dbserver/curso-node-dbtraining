@@ -27,6 +27,20 @@ Refere-se a etapa em que a funcionalidade é adicionada para que o teste passe. 
 
 É onde se aplica a lógica necessária. Como o teste já foi validado nos passos anteriores, o refactor garantirá que a funcionalidade está sendo implementada corretamente. Nesse momento devem ser removidos os dados estáticos e todos itens adicionados para forçar o teste passar, em seguida deve ser feita a implementação real para que o teste volte a passar.
 
+### Ciclo do TDD
+
+![](/image/ciclo-tdd.png)
+
+
+## A pirâmide de testes
+
+A pirâmede de testes é um conseito criado por Mike Cohn, escritor do livro Succeeding with Agile.
+O livro propõe que hajam mais testes de baixo nível, ou seja, testes de unidade, depois testes de integração e no topo os testes que envolvem interface.
+
+![](/image/piramede-de-testes.png)
+
+Atualmente contamos com uma variada gama de testes, sempre em crescimento de acordo com o surgimento  de novas necessidades. Os mais comuns são os teste de unidade e integração.
+
 ## Configurando a aplicação
 
 ### Iniciando o projeto
