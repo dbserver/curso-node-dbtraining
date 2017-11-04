@@ -415,3 +415,246 @@ Vamos rodar nossos testes novamente, depois dessa refatoração e ver se continu
   1 passing (81ms)
 ```
 
+### Configurando os testes unitários
+
+O testes unitários servem para testar pequenas partes do software isoladamente.
+
+Para começar, crie uma diretório chamado **unit** dentro do diretório **test**. Assim como fizemos com o teste de integração, criaremos os arquivos de configuração, são eles o `mocha.opts` e o `helpers.js`.
+
+```sh
+ mkdir test/unit
+ touch test/unit/mocha.opts
+ touch test/unit/helpers.js
+```
+
+> helpers.js
+
+```js
+const chai = require('chai')
+
+global.expect = chai.expect
+```
+
+> mocha.opts
+
+```
+--require test/unit/helpers.js
+--reporter spec
+--slow 5000
+```
+
+Agora vamos até o arquivos `package.json` e adcionar dentro do **scripts** o seguinte código:
+
+```json
+{
+    "scripts": {
+        "test:unit": "NODE_ENV=test mocha --opts test/unit/mocha.opts test/unit/**/*.spec.js"
+    }
+}
+```
+
+Vamos rodar o seguinte comando:
+
+> npm run test:unit
+
+A saída será de erro, informando que não encontrou nenhum arquivo de teste.
+
+```
+Warning: Could not find any test files matching pattern: test/unit/**/*.spec.js
+No test files found
+```
+
+Vamos criar nosso primeiro teste de unidade para o futuro controller dos livros.
+
+```
+    mkdir test/unit/livros
+    touch test/unit/livros/livros-controller.spec.js
+```
+
+O primeiro passo será adicionar a descrição desse senário de testes, como no código a seguir:
+
+```js
+describe('Controllers: Livros', () => {
+    
+});
+```
+
+Dentro dessa descrição vamos adiconar outro descrição para o método **buscar** e logo em seguida adicione o caso de teste em que vai testar o retorno da lista de livros.
+
+```js
+describe('Controllers: Livros', () => {
+    describe('buscar() livros', () => {
+        it('deve retornar a lista de livros', () => {
+            
+        });
+    });
+});
+```
+
+Temos que garantir que o médoto **buscar** retorne uma lista de livros, vamos importar o `livros-controller` e chamar a função `buscar`.
+
+```js
+const livrosController = require('../../../src/livros/livros-controller')
+
+describe('Controllers: Livros', () => {
+    describe('buscar() livros', () => {
+        it('deve retornar a lista de livros', () => {
+            const livros = livrosController.bucar()
+        });
+    });
+});
+```
+
+Rode o camando:
+
+> npm run test:unit
+
+A saída será:
+
+```
+Error: Cannot find module '../../../src/livros/livros-controller'
+```
+
+A mensagem está informando que o módulo livros-controller não foi encontrado.
+
+Vamos fazer nosso teste passar criando o controller e a funcação buscar.
+
+```
+    touch src/livros/livros-controller.js
+```
+
+> livros-controller
+
+```js
+class LivrosController {
+    buscar(req, res){
+
+    }
+}
+
+module.exports = new LivrosController()
+```
+
+Execute o teste novamente
+
+> npm run test:unit
+
+Veja que o teste voltou a passar
+
+```
+  Controllers: Livros
+    buscar() livros
+      ✓ deve retornar a lista de livros
+
+
+  1 passing (10ms)
+```
+
+Até agora não validamos o comportamento esperado, apenas foi validado a existência do nosso controller e sua função buscar. Agora precisamos garantir que o comportamento esperado está sendo coberto.
+
+Primeiro vamos instalar o `sinon.js`, execute o seguinte comando:
+
+> npm i sinon -D
+
+Após a instalação ele já estará disponivel para ser utilizado nos testes, vamos importar o `sinon` e também usar o spy para verificar se a função buscar do controller está realizando o comportamento esperado.
+
+```js
+const sinon = require('sinon')
+const livrosController = require('../../../src/livros/livros-controller')
+
+describe('Controllers: Livros', () => {
+    const livroPadrao = {
+        nome: 'Criando aplicações testáveis com Nodejs',
+        descricao: 'Descrição do livro',
+        preco: 100
+    }
+
+    describe('buscar() livros', () => {
+        it('deve retornar a lista de livros', () => {
+            const request = {}
+            const response = {
+                json: sinon.spy()
+            }
+
+            livrosController.buscar(request, response)
+
+            expect(response.json.called).to.be.true
+            expect(response.json.calledWith(livroPadrao)).to.be.true
+        });
+    });
+});
+```
+
+Vamos rodar os testes de ver o resultado
+
+> npm run test:unit
+
+A saída foi:
+
+```
+
+  Controllers: Livros
+    buscar() livros
+      1) deve retornar a lista de livros
+
+
+  0 passing (14ms)
+  1 failing
+
+  1) Controllers: Livros
+       buscar() livros
+         deve retornar a lista de livros:
+
+      AssertionError: expected false to be true
+      + expected - actual
+
+      -false
+      +true
+```
+
+Nosso teste falhou porque a função buscar não chamou o response.json.
+
+Para que ele folta a passar, temos que fazer o response.json seja chamado no controller.buscar, retornando uma lista de livros.
+
+```js
+class LivrosController {
+    buscar(req, res){
+        res.json([{
+            nome: 'Criando aplicações testáveis com Nodejs',
+            descricao: 'Descrição do livro',
+            preco: 100
+        }])
+    }
+}
+
+module.exports = new LivrosController()
+```
+
+Rode o teste novamente
+
+> npm run test:unit
+
+```
+  Controllers: Livros
+    buscar() livros
+      ✓ deve retornar a lista de livros
+
+
+  1 passing (12ms)
+```
+
+Veja que os testes voltaram a passar novamente.
+
+### Agora vamos integrar Controllers e Rotas
+
+Nosso controller ainda não está integrado com a rota de livros, para isso vamos importar o controller na rota de livros e substituir o código que retornava a lista de livros, chamando agora livrosController.buscar, veja como ficou nosso códico:
+
+```js
+const { buscar } = require('./livros-controller')
+
+module.exports = (app) => {
+
+    app.route('/livros')
+        .get(buscar)
+}
+```
