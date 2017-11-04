@@ -384,3 +384,34 @@ Routes: Livros
 Nosso teste está passando, e estamos no estado **GREEN** do TDD, ou seja, temos o teste e a
 implementação suficiente para ele passar. O próximo passo será o **REFACTOR** onde iremos
 configurar as rotas.
+
+Vamos instalar um modulo `consign`, ele nos permite injetar o express nos aquivos de rotas, sendo assim não precisamos importar as rotas e passar o express por parâmetro.
+
+> npm i consign -S
+
+Depois de instalado vamos até o arquivos `app.js` e adicionamos os seguinte código:
+
+```js
+const consign = require('consign')
+
+...
+
+consign({ cwd: 'src'})
+    .include('livros')
+    .into(app)
+```
+
+Aqui nos importamos o **consign** e logo em seguida executamos a função `consign` passando a configuração cwd: 'src' indicando o diretório raiz onde estarão nossas rotas. Logo na sequência chamamos o `include` passando o diretório onde está nossa rota e por fim chamamos `into` passando o express.
+
+Vamos rodar nossos testes novamente, depois dessa refatoração e ver se continua tudo ok.
+
+> npm run test:integration
+
+```sh
+  Routes: Livros
+    GET /livros
+      ✓ deve retornar uma lista de livros
+
+  1 passing (81ms)
+```
+
