@@ -1,6 +1,9 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const consign = require('consign')
+const models = require('./models')
+
+models.sequelize.sync().done()
 
 const app = express()
 
