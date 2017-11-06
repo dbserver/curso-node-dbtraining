@@ -116,7 +116,7 @@ Primeiro vamos instalar alguns módulos, segue o comando abaixo:
 
 > npm i mocha supertest chai -D
 
-Com esse comando estaremos instalar três módulos
+Com esse comando instalaremos três módulos
 
 * Mocha: módulo que ira executar as suites de testes
 * Chai: módulo usado para fazer asserções.
