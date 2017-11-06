@@ -658,3 +658,173 @@ module.exports = (app) => {
         .get(buscar)
 }
 ```
+
+### Instalando o Sequelize
+
+O **sequelize** é um ORM feito para trabalharmos com javascript e banco de dados, como Mysql, Sqlserver, Postgresql entre outros. Em nosso projeto vamos usar o banco **sqlite3**.
+
+"**SQLite** é uma biblioteca em linguem C que implementa um banco de dados SQL embutido." (Wikipedia) Você não precisa de um servidor de banco de dados radando na sua máquina para poder usar o sqlite, o que facilita a nossas vidas, além de ser um banco de dados leve.
+
+Vamos instalar as dependências
+
+> npm i sequelize sqllite3 -S
+
+Agora vamos criar um diretório dentro de **src**, chamado **config** e um aquivo `config.js` onde deixaremos as configuraçẽos da nossa aplicação.
+
+```
+    mkdir src/config
+    touch src/config/config.json
+```
+
+> src/config/config.json
+
+```js
+{
+  "development": {
+    "username": "root",
+    "password": null,
+    "database": "database_development",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "",
+    "password": "",
+    "database": "biblioteca",
+    "params": {
+      "dialect": "sqlite",
+      "storage": "curso_dbtraning.sqlite",
+      "define" : {
+        "underscored": true
+      }
+    }
+  },
+  "production": {
+    "username": "root",
+    "password": null,
+    "database": "database_production",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}
+```
+
+> src/models/index.js
+
+```js
+'use strict';
+
+var fs        = require('fs');
+var path      = require('path');
+var Sequelize = require('sequelize');
+var basename  = path.basename(__filename);
+var env       = process.env.NODE_ENV || 'development';
+var config    = require(__dirname + '/../config/config.json')[env];
+var db        = {};
+
+if (config.use_env_variable) {
+  var sequelize = new Sequelize(process.env[config.use_env_variable]);
+} else {
+  var sequelize = new Sequelize(config.database, config.username, config.password, config.params);
+}
+
+fs
+  .readdirSync(__dirname)
+  .filter(file => {
+    return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
+  })
+  .forEach(file => {
+    var model = sequelize['import'](path.join(__dirname, file));
+    db[model.name] = model;
+  });
+
+Object.keys(db).forEach(modelName => {
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
+  }
+});
+
+db.sequelize = sequelize;
+db.Sequelize = Sequelize;
+
+module.exports = db;
+```
+
+> src/models/Livros.js
+
+```js
+ module.exports = (sequelize, DataTypes) => {
+    const  Livros = sequelize.define('Livros', {
+        id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true
+        },
+        nome: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                notEmpty: true
+            }
+        },
+        descricao: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                notEmpty: true
+            }
+        }
+    })
+
+    return Livros
+}
+```
+
+> src/app.js
+
+```js
+...
+
+const models = require('./models')
+
+models.sequelize.sync().done()
+
+...
+
+```
+
+> test/integratino/livros/livro-router.spec.js
+
+```js
+describe('Routes: Livros', () => {
+    const Livros = models.Livros
+    const livroPadrao = {
+        nome: 'Criando aplicações testáveis com Nodejs',
+        descricao: 'Descrição do livro'
+    }
+
+    beforeEach(done => {
+        Livros
+            .destroy({ where: {}})
+            .then(()=> Livros.create(livroPadrao))
+            .then(() => done())
+    });
+
+    describe('GET /livros', () => {
+        it('deve retornar uma lista de livros', done => {
+            
+            request
+                .get('/livros')
+                .end((err, res)=> {
+                    const [livro] = res.body
+                    
+                    expect(res.status).to.eql(200)
+                    expect(livro.nome).to.eql(livroPadrao.nome)
+                    expect(livro.descricao).to.eql(livroPadrao.descricao)
+                    
+                    done(err)
+                })
+        })
+    })
+})
+```
