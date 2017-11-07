@@ -1,0 +1,42 @@
+{
+  "name": "curso-dbtraning",
+  "version": "1.0.0",
+  "description": "Construir uma aplicação testável",
+  "main": "index.js",
+  "scripts": {
+    "test:unit": "NODE_ENV=test mocha --opts test/unit/mocha.opts test/unit/**/*.spec.js",
+    "test:integration": "NODE_ENV=test mocha --opts test/integration/mocha.opts test/integration/**/*.spec.js",
+    "sequelize": "sequelize"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dariano/curso-node-dbtraining.git"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "mocha",
+    "chai",
+    "suportest"
+  ],
+  "author": "dariano",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Dariano/curso-node-dbtraining/issues"
+  },
+  "homepage": "https://github.com/Dariano/curso-node-dbtraining#readme",
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^4.0.1",
+    "sequelize-cli": "^3.0.0",
+    "sinon": "^4.1.1",
+    "supertest": "^3.0.0"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "consign": "^0.1.6",
+    "express": "^4.16.2",
+    "sequelize": "^4.22.5",
+    "sqlite3": "^3.1.13"
+  }
+}
